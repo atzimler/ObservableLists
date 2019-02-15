@@ -9,6 +9,10 @@ namespace ATZ.ObservableLists.Tests
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
         }
+
+        protected override void OnItemUpdated(ItemUpdatedEventArgs e)
+        {
+        }
     }
     
 }
