@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F54CB7B-2E4B-4D06-9DB5-B3A52B693616}"
+	ProjectSection(SolutionItems) = preProject
+		ATZ.ObservableLists.xml = ATZ.ObservableLists.xml
+		AssemblyVersion.cs = AssemblyVersion.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATZ.ObservableLists.Tests", "ATZ.ObservableLists.Tests\ATZ.ObservableLists.Tests.csproj", "{5227FDF3-73DD-4471-9FA8-45D3709038B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATZ.ObservableLists", "ATZ.ObservableLists\ATZ.ObservableLists.csproj", "{DF8A6CAE-4A5A-4DAE-993C-DB6D51CA3CA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5227FDF3-73DD-4471-9FA8-45D3709038B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5227FDF3-73DD-4471-9FA8-45D3709038B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5227FDF3-73DD-4471-9FA8-45D3709038B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5227FDF3-73DD-4471-9FA8-45D3709038B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF8A6CAE-4A5A-4DAE-993C-DB6D51CA3CA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF8A6CAE-4A5A-4DAE-993C-DB6D51CA3CA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF8A6CAE-4A5A-4DAE-993C-DB6D51CA3CA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF8A6CAE-4A5A-4DAE-993C-DB6D51CA3CA1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
