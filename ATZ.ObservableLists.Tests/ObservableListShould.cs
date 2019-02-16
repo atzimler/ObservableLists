@@ -351,10 +351,6 @@ namespace ATZ.ObservableLists.Tests
             ol.Should().ContainInOrder(0, 1, 2, 3).And.HaveCount(4);
         }
         
-        // TODO: Maybe add should be considered later a different case than inserting at the end, because if we shrink the collection
-        // while add was not processed, that is still a valid action, because it needs to be added at the end, not inserted at a specific
-        // location (the caller did not specify any location, it was just us fixing it at the time of the call).
-        // Implement it later if needed.
         [Test]
         public void NotInsertItemIfLocationBecameInvalidWhileNotifyCollectionChangedWasProcessed()
         {
