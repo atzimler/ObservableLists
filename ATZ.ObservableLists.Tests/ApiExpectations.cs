@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace ATZ.ObservableLists.Tests
 {
@@ -11,6 +12,10 @@ namespace ATZ.ObservableLists.Tests
         }
 
         protected override void OnItemUpdated(ItemUpdatedEventArgs e)
+        {
+        }
+
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
         }
     }
