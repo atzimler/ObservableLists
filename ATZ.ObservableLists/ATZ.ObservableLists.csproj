@@ -9,14 +9,10 @@
         <AssemblyVersion>1</AssemblyVersion>
         <Authors>Attila Tamas Zimler</Authors>
         <Company>Attila Tamas Zimler</Company>
-        <Description>Library for providing ObservableLists.</Description>
+        <Owners>Attila Tamas Zimler</Owners>
+        <Description>Library for providing List that can be observed for changes.</Description>
         <Copyright>Copyright (C) 2019</Copyright>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DefineConstants>TRACE;JETBRAINS_ANNOTATIONS</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>TRACE;JETBRAINS_ANNOTATIONS</DefineConstants>
+        <PackageReleaseNotes>This is a placeholder, please see RELEASENOTES.txt.</PackageReleaseNotes>
     </PropertyGroup>
 
 </Project>
