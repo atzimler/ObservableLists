@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -468,6 +470,111 @@ namespace ATZ.ObservableLists.Tests
             
             monitor.Should().NotRaise(nameof(ol.ItemUpdated));
         }
+        #endregion
+        
+        #region INotifyPropertyChanged
+        [Test]
+        public void RaisePropertyChangedWhenItemIsAdded()
+        {
+            var ol = new ObservableList<int>();
+
+            var monitor = ol.Monitor();
+            ol.Add(42);
+
+            monitor.Should().RaisePropertyChangeFor(_ => _.Count);
+        }
+
+        [Test]
+        public void RaisePropertyChangedWhenItemIsRemoved()
+        {
+            var ol = new ObservableList<int> { 42 };
+
+            var monitor = ol.Monitor();
+            ol.Remove(42);
+
+            monitor.Should().RaisePropertyChangeFor(_ => _.Count);
+        }
+
+        [Test]
+        public void NotRaisePropertyChangedWhenItemIsMoved()
+        {
+            var ol = new ObservableList<int> { 42, 12 };
+
+            var monitor = ol.Monitor();
+            ol.Move(1, 0);
+            
+            monitor.Should().NotRaisePropertyChangeFor(_ => _.Count);
+        }
+        
+        [Test]
+        public void NotRaisePropertyChangedWhenItemAdditionTriggersRemoval()
+        {
+            var ol = new ObservableList<int>();
+            var changeHandlerExecuted = false;
+
+            ol.CollectionChanged += (o, e) =>
+            {
+                if (changeHandlerExecuted)
+                {
+                    return;
+                }
+
+                ol.RemoveAt(0);
+                changeHandlerExecuted = true;
+            };
+
+            var monitor = ol.Monitor();
+            ol.Add(5);
+            
+            monitor.Should().NotRaisePropertyChangeFor(_ => _.Count);
+        }
+
+        #endregion
+        
+        
+        #region OriginalRequest
+        private NotifyCollectionChangedEventArgs _correctOriginalRequest;
+        
+        private void FirstOriginalRequestVerification(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var ol = (ObservableList<int>)sender;
+
+            ol.OriginalRequest.Should().NotBeNull();
+            _correctOriginalRequest = ol.OriginalRequest;
+
+            ol.CollectionChanged -= FirstOriginalRequestVerification;
+            ol.CollectionChanged += SecondOriginalRequestVerification;
+            ol.Add(42);
+        }
+
+        private void SecondOriginalRequestVerification(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var ol = (ObservableList<int>)sender;
+
+            ol.OriginalRequest.Should().Be(_correctOriginalRequest);
+        }
+
+        private void CollectionChangedProcessed(object sender, PropertyChangedEventArgs e)
+        {
+            var ol = (ObservableList<int>)sender;
+
+            ol.OriginalRequest.Should().Be(_correctOriginalRequest);
+        }
+        
+        [Test]
+        public void SetTheOriginalRequestCorrectlyAtVariousStagesOfTheEventProcessingCycle()
+        {
+            var ol = new ObservableList<int>();
+
+            ol.CollectionChanged += FirstOriginalRequestVerification;
+            ol.PropertyChanged += CollectionChangedProcessed;
+
+            ol.OriginalRequest.Should().BeNull();
+
+            ol.Add(12);
+            ol.OriginalRequest.Should().BeNull();
+        }
+        
         #endregion
     }
 }

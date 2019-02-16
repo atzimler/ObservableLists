@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Globalization;
 
 namespace ATZ.ObservableLists
@@ -16,9 +17,7 @@ namespace ATZ.ObservableLists
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
     // ReSharper disable once InheritdocConsiderUsage => Additional explanation needed for the class because implements different functionality.
-    public class ObservableList<T> 
-        : IReadOnlyList<T>, IList, IList<T>, INotifyCollectionChanged
-        // TODO:        : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ObservableList<T> : IReadOnlyList<T>, IList, IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly Queue<NotifyCollectionChangedEventArgs> _changes = new Queue<NotifyCollectionChangedEventArgs>();
         private readonly EqualityComparer<T> _equalityComparer = EqualityComparer<T>.Default;
@@ -63,17 +62,17 @@ namespace ATZ.ObservableLists
         /// </summary>
         public object SyncRoot => ((ICollection)_items).SyncRoot;
 
-        /// <summary>
-        /// Occurs when an item is added, removed, changed, moved or the entire list is refreshed.
-        /// </summary>
+        /// <inheritdoc />
         public event NotifyCollectionChangedEventHandler CollectionChanged = delegate {  };
-        
         
         /// <summary>
         /// Occurs when an item is declared to have changed state via call to ItemUpdate or ItemUpdateAt functions.
         /// </summary>
-        public event EventHandler<ItemUpdatedEventArgs> ItemUpdated = delegate { }; 
+        public event EventHandler<ItemUpdatedEventArgs> ItemUpdated = delegate { };
 
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        
         private NotifyCollectionChangedEventArgs ApplyChange(NotifyCollectionChangedEventArgs e)
         {
             if (IsObsoleteRequest(e))
@@ -178,14 +177,26 @@ namespace ATZ.ObservableLists
             try
             {
                 _originalRequest = e;
+                var originalCount = _items.Count;
+                
                 while (_changes.Count > 0)
                 {
                     ProcessChange();
                 }
+
+                ProcessCountPropertyChanged(originalCount);
             }
             finally
             {
                 _originalRequest = null;
+            }
+        }
+
+        private void ProcessCountPropertyChanged(int originalCount)
+        {
+            if (originalCount != _items.Count)
+            {
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Count)));
             }
         }
         
@@ -205,6 +216,15 @@ namespace ATZ.ObservableLists
         protected virtual void OnItemUpdated(ItemUpdatedEventArgs e)
         {
             ItemUpdated(this, e);
+        }
+
+        /// <summary>
+        /// Raises the PropertyChanged event with the provided arguments.
+        /// </summary>
+        /// <param name="e">Arguments of the event being raised.</param>
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged(this, e);
         }
 
         private void SetAt(int index, T value) 
@@ -313,7 +333,5 @@ namespace ATZ.ObservableLists
         /// <remarks>If the item has been moved from the requested position or has been replaced or removed before the
         /// change request is processed, the request will be ignored.</remarks>
         public void RemoveAt(int index) => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, _items[index], index)); 
-        
-//        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
