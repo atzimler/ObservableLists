@@ -19,17 +19,22 @@ namespace ATZ.ObservableLists
     // ReSharper disable once InheritdocConsiderUsage => Additional explanation needed for the class because implements different functionality.
     public class ObservableList<T> : IReadOnlyList<T>, IList, IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
+        #region Private Variables
         private readonly Queue<NotifyCollectionChangedEventArgs> _changes = new Queue<NotifyCollectionChangedEventArgs>();
         private readonly EqualityComparer<T> _equalityComparer = EqualityComparer<T>.Default;
         private readonly List<T> _items = new List<T>();
         private NotifyCollectionChangedEventArgs _originalRequest;
+        #endregion
 
+        #region Explicit Indexers
         object IList.this[int index]
         {
             get => _items[index];
             set => SetAt(index, AssertArgumentIsOfTypeT(value));
         }
+        #endregion
 
+        #region Public Properties
         /// <inheritdoc cref="IList&lt;T&gt;" />
         public T this[int index]
         {
@@ -61,7 +66,9 @@ namespace ATZ.ObservableLists
         /// Gets an object that can be used to synchronize access to the ICollection.
         /// </summary>
         public object SyncRoot => ((ICollection)_items).SyncRoot;
+        #endregion
 
+        #region Public Events
         /// <inheritdoc />
         public event NotifyCollectionChangedEventHandler CollectionChanged = delegate {  };
         
@@ -72,7 +79,9 @@ namespace ATZ.ObservableLists
 
         /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
-        
+        #endregion
+
+        #region Private Methods
         private NotifyCollectionChangedEventArgs ApplyChange(NotifyCollectionChangedEventArgs e)
         {
             if (IsObsoleteRequest(e))
@@ -200,6 +209,11 @@ namespace ATZ.ObservableLists
             }
         }
         
+        private void SetAt(int index, T value) 
+            => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, _items[index], index));
+        #endregion
+
+        #region Protected Methods
         /// <summary>
         /// Raises the CollectionChanged event with the provided arguments.
         /// </summary>
@@ -226,10 +240,9 @@ namespace ATZ.ObservableLists
         {
             PropertyChanged(this, e);
         }
+        #endregion
 
-        private void SetAt(int index, T value) 
-            => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, _items[index], index));
-        
+        #region Explicit Methods
         int IList.Add(object item)
         {
             Add(AssertArgumentIsOfTypeT(item));
@@ -237,6 +250,18 @@ namespace ATZ.ObservableLists
             return Count - 1;
         }
 
+        void IList.Insert(int index, object item) => Insert(index, AssertArgumentIsOfTypeT(item));
+        
+        void IList.Remove(object item)
+        {
+            if (item is T x)
+            {
+                Remove(x);
+            }
+        }
+        #endregion
+
+        #region Public Methods        
         /// <inheritdoc />
         /// <remarks>The index of the newly added item is determined on addition, so if in a collection change handler
         /// the number of items grows before the change is applied, the item is still inserted at the end of the
@@ -266,7 +291,6 @@ namespace ATZ.ObservableLists
 
         /// <inheritdoc />
         public void Insert(int index, T item) => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item , index));
-        void IList.Insert(int index, object item) => Insert(index, AssertArgumentIsOfTypeT(item));
 
         /// <summary>
         /// Initiate an ItemUpdated event.
@@ -308,14 +332,6 @@ namespace ATZ.ObservableLists
             ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, _items[oldIndex], newIndex, oldIndex));   
         }
         
-        void IList.Remove(object item)
-        {
-            if (item is T x)
-            {
-                Remove(x);
-            }
-        }
-        
         /// <inheritdoc />
         /// <remarks><see cref="RemoveAt" /></remarks>
         public bool Remove(T item)
@@ -332,6 +348,7 @@ namespace ATZ.ObservableLists
         /// <inheritdoc cref="IList&lt;T&gt;" />
         /// <remarks>If the item has been moved from the requested position or has been replaced or removed before the
         /// change request is processed, the request will be ignored.</remarks>
-        public void RemoveAt(int index) => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, _items[index], index)); 
+        public void RemoveAt(int index) => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, _items[index], index));
+        #endregion
     }
 }
