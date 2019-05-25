@@ -1,2 +1,5 @@
+1.1.0:
+- ObservableList<T>.AddRange.
+
 1.0.0:
 - Initial NuGet Packaging.
