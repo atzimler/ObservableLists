@@ -268,6 +268,26 @@ namespace ATZ.ObservableLists
         /// ObservableList&lt;T&gt; when the change is applied.</remarks>
         public void Add(T item) => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
 
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of the ObservableList&lt;T&gt;.
+        /// </summary>
+        /// <param name="collection">The items to add.</param>
+        /// <remarks>
+        /// The items are processed in sequence with triggering additional events separately as the items are added.</remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        public void AddRange(IEnumerable<T> collection)
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            foreach (var item in collection)
+            {
+                Add(item);
+            }
+        }
+
         /// <inheritdoc cref="IList&lt;T&gt;" />
         public void Clear() => ProcessChanges(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 

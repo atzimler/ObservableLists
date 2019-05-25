@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 
@@ -530,7 +531,7 @@ namespace ATZ.ObservableLists.Tests
 
         #endregion
         
-        
+       
         #region OriginalRequest
         private NotifyCollectionChangedEventArgs _correctOriginalRequest;
         
@@ -574,6 +575,46 @@ namespace ATZ.ObservableLists.Tests
             ol.OriginalRequest.Should().BeNull();
         }
         
+        #endregion
+        
+        #region AddRange
+        [Test]
+        public void AddEmptyEnumerableCorrectly()
+        {
+            var l = new ObservableList<int>();
+
+            l.AddRange(Enumerable.Empty<int>());
+            l.Count.Should().Be(0);
+            l.Should().BeEmpty();
+        }
+
+        [Test]
+        public void AddEnumerableWithSingleItemCorrectly()
+        {
+            var l = new ObservableList<int>();
+
+            l.AddRange(new[] { 42 });
+            l.Count.Should().Be(1);
+            l.Should().ContainInOrder(42);
+        }
+
+        [Test]
+        public void AddEnumerableWithMultipleItemsCorrectly()
+        {
+            var l = new ObservableList<int>();
+
+            l.AddRange(new[] { 42, 43 });
+            l.Count.Should().Be(2);
+            l.Should().ContainInOrder(42, 43);
+        }
+
+        [Test]
+        public void ThrowArgumentNullExceptionIfCollectionIsNull()
+        {
+            var l = new ObservableList<int>();
+
+            Assert.Throws<ArgumentNullException>(() => l.AddRange(null));
+        }
         #endregion
     }
 }
