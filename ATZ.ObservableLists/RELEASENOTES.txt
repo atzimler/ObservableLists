@@ -1,2 +1,8 @@
+1.2.0:
+- ObservableList<T> constructor with a given List<T> object for specifying the items storage as reference.
+
+1.1.0:
+- ObservableList<T>.AddRange.
+
 1.0.0:
 - Initial NuGet Packaging.

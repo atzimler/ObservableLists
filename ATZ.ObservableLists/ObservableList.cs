@@ -22,7 +22,7 @@ namespace ATZ.ObservableLists
         #region Private Variables
         private readonly Queue<NotifyCollectionChangedEventArgs> _changes = new Queue<NotifyCollectionChangedEventArgs>();
         private readonly EqualityComparer<T> _equalityComparer = EqualityComparer<T>.Default;
-        private readonly List<T> _items = new List<T>();
+        private readonly List<T> _items;
         private NotifyCollectionChangedEventArgs _originalRequest;
         #endregion
 
@@ -81,6 +81,38 @@ namespace ATZ.ObservableLists
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
         #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Construct the ObservableList with its own storage for the items.
+        /// </summary>
+        public ObservableList()
+            : this(new List<T>(), true)
+        {
+        }
+        
+        /// <summary>
+        /// Construct the ObservableList with a given storage for the items.
+        /// </summary>
+        /// <param name="storage">The List to wrap for providing events.</param>
+        /// <exception cref="ArgumentNullException">The storage provided is null.</exception>
+        public ObservableList(List<T> storage)
+            : this(storage, true)
+        {
+            if (storage == null)
+            {
+                throw new ArgumentNullException(nameof(storage));
+            }
+        }
+
+        // ReSharper disable UnusedParameter.Local => overload parameter only used to distinguish between the public
+        // wrapper constructor and the private wrapper constructor.
+        private ObservableList(List<T> storage, bool overload)
+            // ReSharper restore UnusedParameter.Local
+        {
+            _items = storage;
+        }
+        #endregion
+        
         #region Private Methods
         private NotifyCollectionChangedEventArgs ApplyChange(NotifyCollectionChangedEventArgs e)
         {
