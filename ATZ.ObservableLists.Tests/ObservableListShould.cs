@@ -616,5 +616,27 @@ namespace ATZ.ObservableLists.Tests
             Assert.Throws<ArgumentNullException>(() => l.AddRange(null));
         }
         #endregion
+        
+        #region Wrapping of a List
+        [Test]
+        public void ProperlyWrapAListAsStorageIfConstructedWithGivenStorage()
+        {
+            var list = new List<int>();
+
+            // ReSharper disable once UnusedVariable => We are testing data addition that is on the same line.
+            var observableList = new ObservableList<int>(list) { 42 };
+
+            list.Should().ContainInOrder(42).And.HaveCount(1);
+        }
+
+        [Test]
+        public void RaiseArgumentNullExceptionWhenConstructedWithNullStorage()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var unused = new ObservableList<int>(null);
+            });
+        }
+        #endregion
     }
 }
