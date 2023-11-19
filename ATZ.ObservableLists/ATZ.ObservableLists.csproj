@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard1.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Version>1</Version>
@@ -16,6 +15,12 @@
         <PackageLicenseUrl>https://raw.githubusercontent.com/atzimler/ObservableLists/master/LICENSE.txt</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/atzimler/ObservableLists</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Update="NETStandard.Library" Version="2.0.3" />
+      <PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.4" />
+    </ItemGroup>
 
 </Project>

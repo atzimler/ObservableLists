@@ -3,7 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F54CB7B-2E4B-4D06-9DB5-B3A52B693616}"
 	ProjectSection(SolutionItems) = preProject
-		ATZ.ObservableLists.xml = ATZ.ObservableLists.xml
 		AssemblyVersion.cs = AssemblyVersion.cs
 		LICENSE.txt = LICENSE.txt
 	EndProjectSection
