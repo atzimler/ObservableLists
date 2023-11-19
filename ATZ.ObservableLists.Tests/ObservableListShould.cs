@@ -80,7 +80,7 @@ namespace ATZ.ObservableLists.Tests
         {
             var ol = new ObservableList<int> { 42, 13 };
 
-            Array items = new int[2];
+            var items = new int[2];
             ol.CopyTo(items, 0);
             items.Should().Contain(new[] { 13, 42 }).And.HaveCount(2);
         }
